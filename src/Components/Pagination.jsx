@@ -7,7 +7,6 @@ const Pagination = ({ totalPosts, postsPerPage }) => {
   for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
     pages.push(i);
   }
-
   return (
     <div className="pagination">
       {pages.map((page, index) => {
