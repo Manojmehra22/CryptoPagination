@@ -1,28 +1,76 @@
-import React from "react";
-import "./Pagination.css";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./pagination.css";
+import CryptoCard from "./CryptoCard";
 
-const Pagination = ({
-  totalPosts,
-  postsPerPage,
-  setCurrentPage,
-  currentPage,
-}) => {
-  let pages = [];
+function Pagination() {
+  const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
+  const indexOfLastItem = currentPage * rowsPerPage;
+  const indexOfFirstItem = indexOfLastItem - rowsPerPage;
+  const currentItems = data?.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(data?.length / rowsPerPage);
 
-  for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
-    pages.push(i);
-  }
+  useEffect(() => {
+    axios
+      .get(
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false"
+      )
+      .then((response) => {
+        console.log(response?.data);
+        setData(response?.data);
+      });
+  }, []);
+
+  const handlePrevClick = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextClick = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
-    <div className="pagination">
-      {pages.map((page, index) => {
-        return (
-          <button key={index} onClick={() => setCurrentPage(page)}>
-            {page}
+    <>
+      <div className="crypto_list">
+        {currentItems.map((coin, index) => {
+          return (
+            <CryptoCard
+              key={index}
+              image={coin.image}
+              name={coin.name}
+              price={coin.current_price}
+            />
+          );
+        })}
+      </div>
+      <div className="pagination">
+        <button onClick={handlePrevClick} disabled={currentPage === 1}>
+          Prev
+        </button>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageClick(index + 1)}
+            className={currentPage === index + 1 ? "active" : ""}
+          >
+            {index + 1}
           </button>
-        );
-      })}
-    </div>
+        ))}
+        <button onClick={handleNextClick} disabled={currentPage === totalPages}>
+          Next
+        </button>
+      </div>
+    </>
   );
-};
+}
 
 export default Pagination;

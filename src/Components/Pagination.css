@@ -1,28 +1,40 @@
-.pagination {
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
+/* .crypto_list {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+} */
+.crypto_list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 15px;
   justify-content: center;
-  margin-top: 1rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
 }
 
 .pagination button {
-  width: 40px;
-  height: 40px;
-  font-family: inherit;
-  font-weight: 600;
-  font-size: 16px;
-  margin: 0 10px;
-  border-radius: 6px;
+  background-color: #2400c2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 5px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  background: transparent;
-  color: #eee;
-  border-color: black;
+  border-radius: 5px;
 }
 
+.pagination button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
 .pagination button.active {
-  font-weight: 900;
-  border-color: #101010;
-  background: #ffe400;
-  color: #101010;
+  background-color: #008cba; /* Change to your preferred color */
+  color: white;
 }
